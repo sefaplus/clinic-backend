@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  clinic_server:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: clinicServer
+    env_file:
+      - ./.env
+    volumes:
+      - ./.:/app/.
+    command: yarn start:dev
+    depends_on:
+      - clinic_db
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+  clinic_db:
+    image: postgres
+    container_name: clinicDb
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
