@@ -13,7 +13,7 @@ services:
     depends_on:
       - clinic_db
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
+      - 8000:8000
   clinic_db:
     image: postgres
     container_name: clinicDb
