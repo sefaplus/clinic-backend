@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import { DoctorSignInDto } from './dto/signIn.dto';
 import { DoctorSignUpDto } from './dto/signUp.dto';
 import { DoctorEntity } from './entity/doctor.entity';
+import { DoctorModifyDto } from './dto/doctorModify.dto';
 
 @Injectable()
 export class DoctorService {
@@ -22,7 +23,7 @@ export class DoctorService {
   ) {}
   async signUp(doctorDto: DoctorSignUpDto) {
     if (!doctorDto.TOSAgreed) {
-      return new ConflictException('Should accept TOS');
+      throw new ConflictException('Should accept TOS');
     }
     const foundDoctor = await this.doctorRepository.findOne({
       where: { login: doctorDto.login },
@@ -37,10 +38,13 @@ export class DoctorService {
       this.config.getOrThrow('BCRYPT_SALT'),
     );
 
-    await this.doctorRepository.save({
-      login: doctorDto.login,
+    const { password, ...saved } = await this.doctorRepository.save({
+      ...doctorDto,
       password: passwordHash,
     });
+    const tokens = await this.authService.generate({ id: saved.id });
+
+    return { tokens, saved };
   }
 
   async signIn(doctorDto: DoctorSignInDto) {
@@ -60,5 +64,21 @@ export class DoctorService {
 
     const tokens = await this.authService.generate({ id: foundDoctor.id });
     return { tokens, foundDoctor };
+  }
+
+  async getDoctor(id: string) {
+    const { password, ...foundDoctor } = await this.doctorRepository.findOne({
+      where: { id },
+    });
+
+    if (!foundDoctor) {
+      throw new NotFoundException('id missing in the database');
+    }
+
+    return foundDoctor;
+  }
+
+  async update(id: string, doctorDto: DoctorModifyDto) {
+    this.doctorRepository.save({ id, ...doctorDto });
   }
 }

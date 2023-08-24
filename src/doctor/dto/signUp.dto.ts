@@ -17,12 +17,12 @@ export class DoctorSignUpDto {
   @IsString()
   lastName: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'doctor' })
   @IsNotEmpty()
   @IsString()
   login: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '123456' })
   @IsString()
   @IsStrongPassword({
     minLength: 6,

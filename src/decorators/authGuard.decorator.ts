@@ -3,13 +3,15 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
+  UseGuards,
+  applyDecorators,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+class AuthGuardClass implements CanActivate {
   constructor(private jwtService: JwtService, private config: ConfigService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -35,3 +37,5 @@ export class AuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
+
+export const AuthGuard = () => applyDecorators(UseGuards(AuthGuardClass));

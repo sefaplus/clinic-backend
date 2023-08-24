@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('Clinic Api')
     .setDescription('Api documentation for clinic server.')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

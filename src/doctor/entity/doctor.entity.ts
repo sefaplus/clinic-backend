@@ -16,9 +16,11 @@ export class DoctorEntity extends SharedBaseEntity {
   password: string;
 
   @Column()
+  @ApiProperty({ example: 'Sefa' })
   firstName: string;
 
   @Column()
+  @ApiProperty({ example: 'Lastname' })
   lastName: string;
 
   @Column({ nullable: true })
