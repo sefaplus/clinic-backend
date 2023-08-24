@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   BaseEntity,
   CreateDateColumn,
@@ -9,11 +10,14 @@ import {
 @Entity()
 export class SharedBaseEntity extends BaseEntity {
   @DeleteDateColumn()
+  @ApiProperty()
   deletedAt: Date;
 
   @UpdateDateColumn()
+  @ApiProperty()
   updatedAt: Date;
 
   @CreateDateColumn()
+  @ApiProperty()
   createdAt: Date;
 }
