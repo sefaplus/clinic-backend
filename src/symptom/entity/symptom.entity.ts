@@ -3,6 +3,7 @@ import { PatientEntity } from 'src/patient/entity/patient.entity';
 import { SharedBaseEntity } from 'src/shared/entity/sharedBase.entity';
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { SymptomSeverity } from '../types/enums';
+import { PatientRecord } from 'src/patientRecord/entity/patientRecord.entity';
 
 @Entity()
 export class SymptomEntity extends SharedBaseEntity {
@@ -17,6 +18,6 @@ export class SymptomEntity extends SharedBaseEntity {
   @ApiProperty({ enum: SymptomSeverity })
   severity: SymptomSeverity;
 
-  @ManyToMany(() => PatientEntity, (p) => p.id)
-  symptoms: PatientEntity[];
+  @ManyToMany(() => PatientRecord, (p) => p.id)
+  symptoms: PatientRecord[];
 }

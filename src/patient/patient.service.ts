@@ -39,25 +39,4 @@ export class PatientService {
 
     return foundPatients;
   }
-
-  async attachSymptom(dto: AttachSymptomDto) {
-    const foundPatient = await this.patientRepository.findOneBy({
-      id: dto.patientId,
-    });
-    if (!foundPatient) {
-      throw new NotFoundException('Patient not found');
-    }
-    const foundSymptom = await this.symptomRepository.findOneBy({
-      id: dto.symptomId,
-    });
-    if (!foundSymptom) {
-      throw new NotFoundException('Patient not found');
-    }
-
-    foundPatient.symptoms = [...(foundPatient?.symptoms ?? []), foundSymptom];
-
-    await foundPatient.save();
-
-    return true;
-  }
 }

@@ -51,7 +51,7 @@ export class PatientController {
   }
 
   @Get('list')
-  @ApiOperation({ summary: 'Lists patients assigned to doctor' })
+  @ApiOperation({ summary: 'Lists patients that are assigned to a  doctor' })
   @ApiQuery({
     name: 'all',
     description: 'Should return all patients?',
@@ -63,12 +63,5 @@ export class PatientController {
     @Query('all') all?: boolean,
   ) {
     return this.patientService.getAll(doctor.id, all);
-  }
-
-  @ApiOperation({ summary: 'Attach symptom to patient' })
-  @Post('attach-symptom')
-  @ApiResponse({ status: 200, type: Boolean })
-  async attachSymptom(@Body() dto: AttachSymptomDto) {
-    return this.patientService.attachSymptom(dto);
   }
 }

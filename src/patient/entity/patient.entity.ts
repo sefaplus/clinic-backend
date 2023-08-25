@@ -46,8 +46,4 @@ export class PatientEntity extends SharedBaseEntity {
   })
   @JoinColumn({ name: 'doctorId' })
   doctor: DoctorEntity;
-
-  @ManyToMany(() => SymptomEntity, (s) => s.id, { cascade: true })
-  @JoinTable()
-  symptoms: SymptomEntity[];
 }

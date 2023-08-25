@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -6,9 +6,15 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/decorators/authGuard.decorator';
-import { PatientRecordDto } from './dto/patientRecord.dto';
+import {
+  ModifyPatientRecordDto,
+  PatientRecordDto,
+  ReturnPatientRecordDto,
+} from './dto/patientRecord.dto';
 import { PatientRecord } from './entity/patientRecord.entity';
 import { PatientRecordsService } from './patientRecord.service';
+import { Doctor } from 'src/decorators/doctor.decorator';
+import { DoctorPayload } from 'src/types/types';
 
 @ApiTags('records')
 @ApiBearerAuth()
@@ -17,10 +23,30 @@ import { PatientRecordsService } from './patientRecord.service';
 export class PatientController {
   constructor(private readonly recordsService: PatientRecordsService) {}
 
+  @Get(':id')
+  @ApiResponse({ status: 200, type: ReturnPatientRecordDto })
+  async getRecordInfo(@Param('id') recordId: string) {
+    return this.recordsService.getRecordInfo(recordId);
+  }
+
   @Post()
-  @ApiOperation({ summary: 'Creates a patient attached to doctor' })
-  @ApiResponse({ status: 201, type: PatientRecord })
-  async createPatient(@Body() patientDto: PatientRecordDto) {
-    return this.recordsService.createRecord(patientDto);
+  @ApiOperation({
+    summary: 'Creates a record attached to patient for a given date&time',
+  })
+  @ApiResponse({ status: 201, type: ReturnPatientRecordDto })
+  async createPatient(
+    @Body() recordDto: PatientRecordDto,
+    @Doctor() doctor: DoctorPayload,
+  ) {
+    return this.recordsService.createRecord(doctor, recordDto);
+  }
+
+  @Put()
+  @ApiOperation({
+    summary: 'Modifies a record attached to patient for a given date&time',
+  })
+  @ApiResponse({ status: 201, type: ReturnPatientRecordDto })
+  async modifyRecord(@Body() patientDto: ModifyPatientRecordDto) {
+    return this.recordsService.modifyRecord(patientDto);
   }
 }

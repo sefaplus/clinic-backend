@@ -10,6 +10,7 @@ import { PatientModule } from './patient/patient.module';
 import { SymptomModule } from './symptom/symptom.module';
 import { SymptomEntity } from './symptom/entity/symptom.entity';
 import { PatientRecordsModule } from './patientRecord/patientRecord.module';
+import { PatientRecord } from './patientRecord/entity/patientRecord.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { PatientRecordsModule } from './patientRecord/patientRecord.module';
         password: configService.getOrThrow('POSTGRES_PASSWORD'),
         database: configService.getOrThrow('POSTGRES_DB'),
         port: +configService.getOrThrow('DB_PORT'),
-        entities: [DoctorEntity, PatientEntity, SymptomEntity],
+        entities: [DoctorEntity, SymptomEntity, PatientEntity, PatientRecord],
         logging: true,
         synchronize: true,
       }),
