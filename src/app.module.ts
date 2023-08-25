@@ -11,6 +11,10 @@ import { SymptomModule } from './symptom/symptom.module';
 import { SymptomEntity } from './symptom/entity/symptom.entity';
 import { PatientRecordsModule } from './patientRecord/patientRecord.module';
 import { PatientRecord } from './patientRecord/entity/patientRecord.entity';
+import { MedicationEntity } from './medication/entity/medication.entity';
+import { MedicationModule } from './medication/medication.module';
+import { PrescriptionModule } from './prescription/prescription.module';
+import { PrescriptionEntity } from './prescription/entity/prescription.entity';
 
 @Module({
   imports: [
@@ -24,7 +28,14 @@ import { PatientRecord } from './patientRecord/entity/patientRecord.entity';
         password: configService.getOrThrow('POSTGRES_PASSWORD'),
         database: configService.getOrThrow('POSTGRES_DB'),
         port: +configService.getOrThrow('DB_PORT'),
-        entities: [DoctorEntity, SymptomEntity, PatientEntity, PatientRecord],
+        entities: [
+          DoctorEntity,
+          SymptomEntity,
+          PatientEntity,
+          PatientRecord,
+          MedicationEntity,
+          PrescriptionEntity,
+        ],
         logging: true,
         synchronize: true,
       }),
@@ -33,6 +44,8 @@ import { PatientRecord } from './patientRecord/entity/patientRecord.entity';
     PatientModule,
     SymptomModule,
     PatientRecordsModule,
+    MedicationModule,
+    PrescriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

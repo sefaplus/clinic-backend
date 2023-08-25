@@ -6,10 +6,12 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -31,13 +33,6 @@ import { DoctorPayload } from 'src/types/types';
 export class PatientController {
   constructor(private readonly recordsService: PatientRecordsService) {}
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get record data' })
-  @ApiResponse({ status: 200, type: ReturnPatientRecordDto })
-  async getRecordInfo(@Param('id') recordId: string) {
-    return this.recordsService.getRecordInfo(recordId);
-  }
-
   @Post()
   @ApiOperation({
     summary: 'Creates a record attached to patient for a given date&time',
@@ -50,13 +45,16 @@ export class PatientController {
     return this.recordsService.createRecord(doctor, recordDto);
   }
 
-  @Put()
+  @Put(':id')
   @ApiOperation({
     summary: 'Modifies a record attached to patient for a given date&time',
   })
   @ApiResponse({ status: 201, type: ReturnPatientRecordDto })
-  async modifyRecord(@Body() patientDto: ModifyPatientRecordDto) {
-    return this.recordsService.modifyRecord(patientDto);
+  async modifyRecord(
+    @Body() patientDto: ModifyPatientRecordDto,
+    @Param(':id') id: string,
+  ) {
+    return this.recordsService.modifyRecord(id, patientDto);
   }
 
   @Delete(':id')
@@ -64,5 +62,39 @@ export class PatientController {
   @ApiResponse({ status: 410, type: Boolean })
   async deletePatient(@Param('id') id: string) {
     this.recordsService.delete(id);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get record data' })
+  @ApiResponse({ status: 200, type: ReturnPatientRecordDto })
+  async getRecordInfo(@Param('id') recordId: string) {
+    return this.recordsService.getRecordInfo(recordId);
+  }
+
+  @Get('for/:patientId')
+  @ApiOperation({ summary: 'Get record data for a patient' })
+  @ApiQuery({
+    name: 'take',
+    description: 'Amount per page',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'page',
+    description: 'Page (>0!)',
+    required: false,
+    type: Number,
+  })
+  @ApiResponse({ status: 200, type: ReturnPatientRecordDto })
+  async getRecordInfoForPatient(
+    @Param('patientId') patientId: string,
+    @Query('take') take?: string,
+    @Query('page') page?: string,
+  ) {
+    return this.recordsService.getRecordInfoForPatient(
+      patientId,
+      take && Number(take),
+      page && Number(page),
+    );
   }
 }

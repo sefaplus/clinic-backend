@@ -12,6 +12,7 @@ import { DoctorSignInDto } from './dto/signIn.dto';
 import { DoctorSignUpDto } from './dto/signUp.dto';
 import { DoctorEntity } from './entity/doctor.entity';
 import { DoctorModifyDto } from './dto/doctorModify.dto';
+import { DoctorPayload } from 'src/types/types';
 
 @Injectable()
 export class DoctorService {
@@ -79,6 +80,14 @@ export class DoctorService {
   }
 
   async update(id: string, doctorDto: DoctorModifyDto) {
-    this.doctorRepository.save({ id, ...doctorDto });
+    return this.doctorRepository.save({ id, ...doctorDto });
+  }
+
+  async refresh(refreshToken: string) {
+    const doc: DoctorPayload = await this.authService.verify(refreshToken);
+
+    const tokens = await this.authService.generate({ id: doc.id });
+
+    return tokens;
   }
 }

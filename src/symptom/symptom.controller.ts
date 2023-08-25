@@ -43,15 +43,18 @@ export class SymptomController {
     return this.symptomService.save(symptomDto);
   }
 
-  @Put()
-  @ApiOperation({ summary: 'Creates a symptom of given name and severity' })
+  @Put(':id')
+  @ApiOperation({ summary: 'Modifies a symptom of given name and severity' })
   @ApiResponse({
     status: 201,
     type: ReturnSymptomDto,
     description: 'Creates symptom',
   })
-  async updateSymptom(@Body() symptomDto: ModifySymptomDto) {
-    return this.symptomService.save(symptomDto);
+  async updateSymptom(
+    @Body() symptomDto: ModifySymptomDto,
+    @Param('id') id: string,
+  ) {
+    return this.symptomService.save(symptomDto, id);
   }
 
   @Delete(':id')

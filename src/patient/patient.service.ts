@@ -36,7 +36,13 @@ export class PatientService {
     page: number | undefined,
   ) {
     const foundPatients = await this.patientRepository.find({
-      relations: ['records', 'doctor', 'records.symptoms'],
+      relations: [
+        'records',
+        'doctor',
+        'records.symptoms',
+        'prescriptions',
+        'prescriptions.medication',
+      ],
       where: { ...(all && { doctorId: id }) },
       take,
       skip: page && take * (page - 1),

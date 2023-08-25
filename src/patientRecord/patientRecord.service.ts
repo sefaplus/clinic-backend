@@ -59,9 +59,9 @@ export class PatientRecordsService {
     });
   }
 
-  async modifyRecord(dto: ModifyPatientRecordDto) {
+  async modifyRecord(id: string, dto: ModifyPatientRecordDto) {
     const foundRecord = await this.patientRecordRepository.findOneBy({
-      id: dto.id,
+      id,
     });
 
     if (!foundRecord) {
@@ -117,5 +117,18 @@ export class PatientRecordsService {
     await foundRecord.softRemove();
 
     return true;
+  }
+
+  async getRecordInfoForPatient(
+    patientId: string,
+    take?: number,
+    page?: number,
+  ) {
+    return this.patientRecordRepository.find({
+      where: { patientId },
+      relations: ['symptoms'],
+      take,
+      skip: page && take * (page - 1),
+    });
   }
 }

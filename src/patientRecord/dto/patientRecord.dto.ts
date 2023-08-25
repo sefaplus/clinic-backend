@@ -1,10 +1,9 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
-import { PatientRecord } from '../entity/patientRecord.entity';
-import { SymptomEntity } from 'src/symptom/entity/symptom.entity';
-import { ReturnSymptomDto, SymptomDto } from 'src/symptom/dto/symptom.dto';
+import { DoctorEntity } from 'src/doctor/entity/doctor.entity';
 import { PatientDtoResponse } from 'src/patient/dto/patient.dto';
 import { PatientEntity } from 'src/patient/entity/patient.entity';
-import { DoctorEntity } from 'src/doctor/entity/doctor.entity';
+import { SymptomEntity } from 'src/symptom/entity/symptom.entity';
+import { PatientRecord } from '../entity/patientRecord.entity';
 
 export class PatientRecordDto extends PartialType(
   OmitType(PatientRecord, [
@@ -42,6 +41,7 @@ export class ModifyPatientRecordDto extends PartialType(
     'patientId',
     'doctorId',
     'symptoms',
+    'id',
   ]),
 ) {
   @ApiProperty({ example: ['id'] })

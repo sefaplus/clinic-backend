@@ -11,8 +11,8 @@ export class SymptomService {
     private readonly symptomRepository: Repository<SymptomEntity>,
   ) {}
 
-  async save(symptomDto: SymptomDto) {
-    return this.symptomRepository.save(symptomDto);
+  async save(symptomDto: SymptomDto, id?: string) {
+    return this.symptomRepository.save({ id, ...symptomDto });
   }
 
   async getAll() {

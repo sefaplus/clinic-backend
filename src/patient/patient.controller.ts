@@ -51,15 +51,16 @@ export class PatientController {
     this.patientService.deletePatient(id);
   }
 
-  @Get('list')
+  @Get('all')
   @ApiOperation({
-    summary: 'Lists patients that are assigned to a  doctor',
+    summary: 'Lists patients that are assigned to a doctor',
     description:
       'Lists patients to currently attached doctor (thru jwt). Can instead return global. Paginated',
   })
   @ApiQuery({
     name: 'all',
-    description: 'Should return all patients?',
+    description:
+      'Should return all patients that are in the system (Including to not currently attached doctor)?',
     required: false,
     type: Boolean,
   })
