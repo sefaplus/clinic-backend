@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SymptomEntity } from './entity/symptom.entity';
 import { Repository } from 'typeorm';
@@ -11,11 +11,22 @@ export class SymptomService {
     private readonly symptomRepository: Repository<SymptomEntity>,
   ) {}
 
-  async create(symptomDto: SymptomDto) {
+  async save(symptomDto: SymptomDto) {
     return this.symptomRepository.save(symptomDto);
   }
 
   async getAll() {
     return this.symptomRepository.find();
+  }
+
+  async delete(id: string) {
+    const foundSymptom = await this.symptomRepository.findOneBy({ id });
+    if (!foundSymptom) {
+      throw new NotFoundException('Symptom not found');
+    }
+
+    await foundSymptom.softRemove();
+
+    return true;
   }
 }

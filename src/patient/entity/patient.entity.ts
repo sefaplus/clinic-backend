@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DoctorEntity } from 'src/doctor/entity/doctor.entity';
+import { PatientRecord } from 'src/patientRecord/entity/patientRecord.entity';
 import { SharedBaseEntity } from 'src/shared/entity/sharedBase.entity';
 import { SymptomEntity } from 'src/symptom/entity/symptom.entity';
 import {
@@ -9,6 +10,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -46,4 +48,7 @@ export class PatientEntity extends SharedBaseEntity {
   })
   @JoinColumn({ name: 'doctorId' })
   doctor: DoctorEntity;
+
+  @OneToMany(() => PatientRecord, (pr) => pr.patient)
+  records: [];
 }

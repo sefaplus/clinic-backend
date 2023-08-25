@@ -107,4 +107,15 @@ export class PatientRecordsService {
       throw new NotFoundException('record not found');
     }
   }
+
+  async delete(id: string) {
+    const foundRecord = await this.patientRecordRepository.findOneBy({ id });
+    if (!foundRecord) {
+      throw new NotFoundException('Symptom not found');
+    }
+
+    await foundRecord.softRemove();
+
+    return true;
+  }
 }

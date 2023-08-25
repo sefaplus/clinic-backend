@@ -1,13 +1,34 @@
-import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProperty,
+  OmitType,
+  PartialType,
+} from '@nestjs/swagger';
 import { PatientEntity } from '../entity/patient.entity';
+import { DoctorEntity } from 'src/doctor/entity/doctor.entity';
+import { ReturnPatientRecordDto } from 'src/patientRecord/dto/patientRecord.dto';
 
 export class PatientDto extends PartialType(
   OmitType(PatientEntity, ['createdAt', 'createdAt', 'deletedAt']),
 ) {}
 
-export class PatientDtoResponse extends PatientDto {
+export class PatientDtoResponse extends PartialType(
+  OmitType(PatientDto, ['records']),
+) {
   @ApiProperty({
     example: `e7fb4d74-4246-11ee-be56-0242ac120002`,
   })
   id: string;
+
+  @ApiProperty({
+    type: DoctorEntity,
+    nullable: true,
+  })
+  doctor: DoctorEntity;
+
+  @ApiProperty({
+    type: ReturnPatientRecordDto,
+    isArray: true,
+  })
+  records: DoctorEntity;
 }

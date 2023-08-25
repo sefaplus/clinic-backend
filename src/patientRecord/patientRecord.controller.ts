@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -24,6 +32,7 @@ export class PatientController {
   constructor(private readonly recordsService: PatientRecordsService) {}
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get record data' })
   @ApiResponse({ status: 200, type: ReturnPatientRecordDto })
   async getRecordInfo(@Param('id') recordId: string) {
     return this.recordsService.getRecordInfo(recordId);
@@ -48,5 +57,12 @@ export class PatientController {
   @ApiResponse({ status: 201, type: ReturnPatientRecordDto })
   async modifyRecord(@Body() patientDto: ModifyPatientRecordDto) {
     return this.recordsService.modifyRecord(patientDto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Deletes a patient record' })
+  @ApiResponse({ status: 410, type: Boolean })
+  async deletePatient(@Param('id') id: string) {
+    this.recordsService.delete(id);
   }
 }

@@ -2,21 +2,27 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
+  NotFoundException,
+  Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiException } from 'src/decorators/apiException.decorator';
-import { AuthGuard } from 'src/decorators/authGuard.decorator';
-import { ReturnSymptomDto, SymptomDto } from './dto/symptom.dto';
-import { SymptomService } from './symptom.service';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { SymptomEntity } from './entity/symptom.entity';
+import { ApiException } from 'src/decorators/apiException.decorator';
+import { AuthGuard } from 'src/decorators/authGuard.decorator';
+import {
+  ModifySymptomDto,
+  ReturnSymptomDto,
+  SymptomDto,
+} from './dto/symptom.dto';
+import { SymptomService } from './symptom.service';
 
 @ApiTags('symptoms')
 @ApiBearerAuth()
@@ -34,7 +40,30 @@ export class SymptomController {
   })
   @ApiException(() => ConflictException, { description: 'Already exists' })
   async createSymptom(@Body() symptomDto: SymptomDto) {
-    return this.symptomService.create(symptomDto);
+    return this.symptomService.save(symptomDto);
+  }
+
+  @Put()
+  @ApiOperation({ summary: 'Creates a symptom of given name and severity' })
+  @ApiResponse({
+    status: 201,
+    type: ReturnSymptomDto,
+    description: 'Creates symptom',
+  })
+  async updateSymptom(@Body() symptomDto: ModifySymptomDto) {
+    return this.symptomService.save(symptomDto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Creates a symptom of given name and severity' })
+  @ApiResponse({
+    status: 410,
+    type: Boolean,
+    description: 'Deletes.',
+  })
+  @ApiException(() => NotFoundException, { description: 'Symptom not found' })
+  async delete(@Param('id') id: string) {
+    return this.symptomService.delete(id);
   }
 
   @Get('all')

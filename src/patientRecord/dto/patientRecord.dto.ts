@@ -1,7 +1,7 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { PatientRecord } from '../entity/patientRecord.entity';
 import { SymptomEntity } from 'src/symptom/entity/symptom.entity';
-import { ReturnSymptomDto } from 'src/symptom/dto/symptom.dto';
+import { ReturnSymptomDto, SymptomDto } from 'src/symptom/dto/symptom.dto';
 import { PatientDtoResponse } from 'src/patient/dto/patient.dto';
 import { PatientEntity } from 'src/patient/entity/patient.entity';
 import { DoctorEntity } from 'src/doctor/entity/doctor.entity';
@@ -23,7 +23,7 @@ export class PatientRecordDto extends PartialType(
 export class ReturnPatientRecordDto extends PartialType(
   OmitType(PatientRecord, ['symptoms', 'doctor']),
 ) {
-  @ApiProperty({ type: PartialType(ReturnSymptomDto), isArray: true })
+  @ApiProperty({ type: PartialType(SymptomEntity), isArray: true })
   symptoms: SymptomEntity[];
 
   @ApiProperty({ type: PatientDtoResponse })

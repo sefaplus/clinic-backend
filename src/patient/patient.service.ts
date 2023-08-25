@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { PatientEntity } from './entity/patient.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PatientDto } from './dto/patient.dto';
@@ -11,8 +11,6 @@ export class PatientService {
   constructor(
     @InjectRepository(PatientEntity)
     private readonly patientRepository: Repository<PatientEntity>,
-    @InjectRepository(SymptomEntity)
-    private readonly symptomRepository: Repository<SymptomEntity>,
   ) {}
 
   async createPatient(patientDto: PatientDto) {
@@ -31,10 +29,17 @@ export class PatientService {
     return true;
   }
 
-  async getAll(id: string, all: boolean) {
+  async getAll(
+    id: string,
+    all: boolean | undefined,
+    take: number | undefined,
+    page: number | undefined,
+  ) {
     const foundPatients = await this.patientRepository.find({
-      relations: ['symptoms'],
-      ...(all && { where: { doctorId: id } }),
+      relations: ['records', 'doctor', 'records.symptoms'],
+      where: { ...(all && { doctorId: id }) },
+      take,
+      skip: page && take * (page - 1),
     });
 
     return foundPatients;

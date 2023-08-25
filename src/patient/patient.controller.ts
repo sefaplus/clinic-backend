@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -51,17 +52,41 @@ export class PatientController {
   }
 
   @Get('list')
-  @ApiOperation({ summary: 'Lists patients that are assigned to a  doctor' })
+  @ApiOperation({
+    summary: 'Lists patients that are assigned to a  doctor',
+    description:
+      'Lists patients to currently attached doctor (thru jwt). Can instead return global. Paginated',
+  })
   @ApiQuery({
     name: 'all',
     description: 'Should return all patients?',
     required: false,
     type: Boolean,
   })
+  @ApiQuery({
+    name: 'take',
+    description: 'Amount per page',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'page',
+    description: 'Page (>0!)',
+    required: false,
+    type: Number,
+  })
+  @ApiResponse({ status: 200, type: PatientDtoResponse, isArray: true })
   async getPatientList(
     @Doctor() doctor: DoctorPayload,
     @Query('all') all?: boolean,
+    @Query('take') take?: number,
+    @Query('page') page?: number,
   ) {
-    return this.patientService.getAll(doctor.id, all);
+    return this.patientService.getAll(
+      doctor.id,
+      all,
+      take && Number(take),
+      page && Number(page),
+    );
   }
 }
