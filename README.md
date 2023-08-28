@@ -1,5 +1,11 @@
-1. Copy .env.example values to .env file
-2. Next start the app:
+1. Install dependencies
+   
+```bash
+yarn
+```
+
+2. Copy .env.example values to .env file
+3. Next start the app:
 
 ```bash
 docker-compose up
